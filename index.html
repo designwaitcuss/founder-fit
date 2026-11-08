@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Founder Fit, the free prompt</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="The 5 questions MyMatrix asks every founder, as a free prompt for ChatGPT or Claude.">
+<meta property="og:title" content="Founder Fit, the free prompt">
+<meta property="og:description" content="The 5 questions MyMatrix asks every founder. Answer them, get a harsh founder score out of 100.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#ffffff; --ink:#151618; --go:#3d9558; --flow:#375eeb; --soft:#f5f5f6;
+  --line:#e6e6e8; --muted:#6c6e72; --faint:#a6a7ab; --go-soft:#eaf5ee; --flow-soft:#edf1fe; --track:#ececee;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#111214; --ink:#ececee; --soft:#1c1d20; --line:#2a2b2f; --muted:#9a9ca0; --faint:#6c6e72;
+    --go-soft:#16261b; --flow-soft:#161c33; --track:#2a2b2f;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#111214; --ink:#ececee; --soft:#1c1d20; --line:#2a2b2f; --muted:#9a9ca0; --faint:#6c6e72;
+  --go-soft:#16261b; --flow-soft:#161c33; --track:#2a2b2f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Inter Tight",Arial,Helvetica,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+main{max-width:1000px;margin:0 auto;padding:36px 16px 96px}
+a{color:var(--flow)}
+.brand{font-weight:800;font-size:17px;letter-spacing:-0.02em}
+.brand span{font-weight:500;color:var(--muted)}
+h1{font-size:clamp(48px,9vw,88px);font-weight:800;line-height:0.95;letter-spacing:-0.045em;margin:56px 0 18px}
+.lead{font-size:clamp(20px,2.6vw,25px);line-height:1.3;letter-spacing:-0.015em;max-width:30ch;margin:0}
+.for{color:var(--muted);font-size:17px;margin:18px 0 0;max-width:56ch}
+section{margin-top:84px}
+h2{font-size:clamp(26px,3.4vw,34px);font-weight:800;line-height:1.1;letter-spacing:-0.035em;margin:0 0 20px}
+.note{font-size:15px;color:var(--muted);margin:12px 0 0}
+.card{background:var(--soft);border-radius:18px;padding:20px}
+
+/* run it */
+.run{background:var(--soft);border-radius:22px;padding:26px 24px 22px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 22px;padding:0;list-style:none}
+.steps li{display:flex;gap:12px;align-items:flex-start;font-weight:500;font-size:18px;line-height:1.3;letter-spacing:-0.01em}
+.num{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:14px}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:17px;letter-spacing:-0.01em;border-radius:999px;padding:13px 22px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:0}
+.btn.main{background:var(--ink);color:var(--page)}
+.btn.alt{background:var(--page);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.alt:hover{box-shadow:inset 0 0 0 1.5px var(--faint)}
+.btn:focus-visible{outline:2px solid var(--flow);outline-offset:2px}
+.copied{color:var(--go);font-weight:700;font-size:15px;align-self:center;opacity:0;transition:opacity .2s}
+.copied.on{opacity:1}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--muted);font-weight:500;font-size:15px}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--page);border-radius:14px;padding:18px;margin:12px 0 0;font:14px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);max-height:420px;overflow:auto;box-shadow:inset 0 0 0 1px var(--line)}
+
+/* the five questions */
+.qs{display:grid;gap:10px}
+.qrow{display:grid;grid-template-columns:42px minmax(0,1fr) 210px;gap:14px;align-items:center;background:var(--soft);border-radius:16px;padding:16px 18px}
+.qrow .q{font-size:20px;font-weight:700;letter-spacing:-0.02em;line-height:1.25}
+.qrow .part{font-size:15px;color:var(--muted);text-align:right}
+.qrow .part b{display:block;color:var(--ink);font-weight:700}
+
+/* example read */
+.read{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:12px}
+.score{background:var(--soft);border-radius:22px;padding:24px}
+.score .total{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.score .n{font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:1}
+.score .n small{font-size:20px;color:var(--muted);font-weight:500;letter-spacing:0}
+.score .t{font-size:20px;font-weight:700;letter-spacing:-0.02em}
+.score .weak{color:var(--muted);font-size:15px;margin:0 0 18px}
+.bar{display:grid;grid-template-columns:150px minmax(0,1fr) 28px;gap:12px;align-items:center;font-size:15px;padding:6px 0}
+.bar .tr{height:8px;background:var(--track);border-radius:4px;overflow:hidden}
+.bar .tr i{display:block;height:100%;background:var(--flow);border-radius:4px}
+.bar .v{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.type{background:var(--soft);border-radius:22px;padding:24px}
+.type h3{margin:0 0 4px;font-size:20px;letter-spacing:-0.02em}
+.type p{margin:0 0 16px;color:var(--muted);font-size:15px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 div{border-radius:12px;padding:14px 12px;text-align:center;font-weight:700;font-size:15px;color:var(--faint);box-shadow:inset 0 0 0 1.5px var(--line);border:0}
+.grid2 div.on{background:var(--ink);color:var(--page);box-shadow:none}
+
+/* the 7 levels */
+.groups{display:grid;grid-template-columns:4fr 3fr;gap:12px;margin-bottom:8px}
+.groups div{font-size:14px;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:6px}
+.road{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.lv{background:var(--soft);border-radius:16px;padding:14px 12px 12px;display:flex;flex-direction:column;gap:8px;min-height:176px}
+.lv.on{background:var(--page);box-shadow:inset 0 0 0 1.8px var(--ink)}
+.lv b{font-size:16px;letter-spacing:-0.02em;line-height:1.15}
+.lv p{margin:0;font-size:14px;line-height:1.3;color:var(--muted);flex:1}
+.lv .num{width:26px;height:26px;font-size:12px;border-width:1.6px}
+.st{align-self:flex-start;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px}
+.st.live{background:var(--go-soft);color:var(--go)}
+.st.soon{color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2fr);gap:12px}
+.about .hi{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.3}
+.about .hi span{display:block;color:var(--muted);font-weight:500;font-size:17px;letter-spacing:-0.01em;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.stat .v{font-size:30px;font-weight:800;letter-spacing:-0.04em;line-height:1.05}
+.stat .v small{font-size:15px;font-weight:700;color:var(--muted);letter-spacing:0}
+.stat .d{font-size:15px;color:var(--muted);margin-top:8px;line-height:1.35}
+
+/* offer */
+.promise{background:var(--ink);color:var(--page);border-radius:22px;padding:28px 26px;margin-bottom:12px}
+.promise .big{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-0.04em;line-height:1.05;max-width:22ch}
+.promise .g{margin-top:14px;font-size:17px;opacity:.7}
+.offer{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tile{background:var(--soft);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.tile.main{background:var(--page);box-shadow:inset 0 0 0 1.8px var(--ink)}
+.tile h4{margin:0;font-size:15px;color:var(--muted);font-weight:700}
+.tile .price{font-size:34px;font-weight:800;letter-spacing:-0.04em;line-height:1.1}
+.tile .price s{color:var(--faint);font-size:22px;margin-right:6px;font-weight:700}
+.tile .price small{font-size:15px;color:var(--muted);font-weight:500;letter-spacing:0}
+.tile ul{margin:8px 0 0;padding-left:18px;font-size:15px;display:grid;gap:5px}
+
+/* next */
+.next{background:var(--flow-soft);border-radius:22px;padding:30px 26px;text-align:center}
+.next .big{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-0.04em;line-height:1.1}
+.next .big b{color:var(--flow)}
+.next p{margin:12px auto 22px;max-width:44ch;font-size:18px}
+.next .btns{justify-content:center}
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qa h4{margin:0 0 8px;font-size:17px;letter-spacing:-0.01em}
+.qa p{margin:0;font-size:16px;color:var(--muted)}
+.sign{margin-top:72px;font-size:18px;line-height:1.5}
+
+@media (max-width: 760px){
+  .steps,.read,.about,.stats,.offer,.qa{grid-template-columns:minmax(0,1fr)}
+  .qrow{grid-template-columns:34px minmax(0,1fr)}
+  .qrow .part{grid-column:2;text-align:left}
+  .road{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .groups{display:none}
+  .bar{grid-template-columns:120px minmax(0,1fr) 26px}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">MyMatrix <span>by Lauri</span></div>
+
+  <h1>Founder Fit</h1>
+  <p class="lead">The 5 questions MyMatrix asks every founder, as a free prompt for ChatGPT or Claude.</p>
+  <p class="for">For freelancers and domain experts who are good at something and have no paying customer for the skill yet. You get a harsh read of you as a founder, before anyone talks about an idea.</p>
+
+  <section>
+    <div class="run">
+      <ol class="steps">
+        <li><span class="num">1</span>Copy the prompt, or open it straight in ChatGPT or Claude</li>
+        <li><span class="num">2</span>Answer 5 questions, one at a time, in your own words</li>
+        <li><span class="num">3</span>Get your founder score out of 100, your weak spot and your founder type</li>
+      </ol>
+      <div class="btns">
+        <button class="btn main" id="copy" type="button">Copy the prompt</button>
+        <a class="btn alt" id="gpt" href="#" target="_blank" rel="noopener">Open in ChatGPT</a>
+        <a class="btn alt" id="claude" href="#" target="_blank" rel="noopener">Open in Claude</a>
+        <span class="copied" id="copied">Copied</span>
+      </div>
+      <details><summary>See the whole prompt</summary><pre id="prompt-view"></pre></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>The 5 questions, and what each one measures</h2>
+    <div class="qs">
+      <div class="qrow"><span class="num">1</span><div class="q">What could you talk about for hours?</div><div class="part"><b>Knows the field</b>up to 20 points</div></div>
+      <div class="qrow"><span class="num">2</span><div class="q">What do people already ask you for help with?</div><div class="part"><b>People already ask</b>up to 20 points</div></div>
+      <div class="qrow"><span class="num">3</span><div class="q">What can you make or do alone today, with no money and no team?</div><div class="part"><b>Can deliver today</b>up to 20 points</div></div>
+      <div class="qrow"><span class="num">4</span><div class="q">Which groups are you in?</div><div class="part"><b>Can reach buyers</b>up to 20 points</div></div>
+      <div class="qrow"><span class="num">5</span><div class="q">What would feel like a win in 30 days?</div><div class="part"><b>Clear 30-day win</b>up to 20 points</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What comes back</h2>
+    <div class="read">
+      <div class="score">
+        <div class="total"><span class="n">62<small>/100</small></span><span class="t">Founder strength</span></div>
+        <p class="weak">Clear 30-day win is the weak spot</p>
+        <div class="bar"><span>Knows the field</span><span class="tr"><i style="width:80%"></i></span><span class="v">16</span></div>
+        <div class="bar"><span>People already ask</span><span class="tr"><i style="width:70%"></i></span><span class="v">14</span></div>
+        <div class="bar"><span>Can deliver today</span><span class="tr"><i style="width:80%"></i></span><span class="v">16</span></div>
+        <div class="bar"><span>Can reach buyers</span><span class="tr"><i style="width:50%"></i></span><span class="v">10</span></div>
+        <div class="bar"><span>Clear 30-day win</span><span class="tr"><i style="width:30%"></i></span><span class="v">6</span></div>
+      </div>
+      <div class="type">
+        <h3>Your founder type</h3>
+        <p>A guess from your answers. Say so when the guess is wrong.</p>
+        <div class="grid2"><div>Creator</div><div>Storyteller</div><div>Builder</div><div class="on">Operator</div></div>
+      </div>
+    </div>
+    <p class="note">An example read from the MyMatrix app. Your read comes from your own answers, and the score is harsh on purpose.</p>
+  </section>
+
+  <section>
+    <h2>Founder Fit is level 1 of 7</h2>
+    <div class="groups"><div>About you</div><div>Into a business</div></div>
+    <div class="road">
+      <div class="lv on"><span class="num">1</span><b>Founder Fit</b><p>Where does your drive come from? Passion, profession or pain.</p><span class="st live">Live</span></div>
+      <div class="lv"><span class="num">2</span><b>Want</b><p>What do you actually want to do?</p><span class="st soon">In build</span></div>
+      <div class="lv"><span class="num">3</span><b>Fuel</b><p>How does each path feel?</p><span class="st soon">In build</span></div>
+      <div class="lv"><span class="num">4</span><b>Blueprint</b><p>What steers your choices?</p><span class="st soon">In build</span></div>
+      <div class="lv"><span class="num">5</span><b>Elevator MVP</b><p>Pick one idea. A pitch, a price and a payment link.</p><span class="st live">Live</span></div>
+      <div class="lv"><span class="num">6</span><b>Door Knock</b><p>One next step at a time, every buyer tracked.</p><span class="st live">Live</span></div>
+      <div class="lv"><span class="num">7</span><b>Proof</b><p>Did someone pay for it?</p><span class="st soon">In build</span></div>
+    </div>
+    <p class="note">MyMatrix takes you from who you are to your first paying customer. Each level is one app, with a 1 minute video from me and a chat that asks the questions.</p>
+  </section>
+
+  <section>
+    <h2>Who is behind MyMatrix</h2>
+    <div class="about">
+      <div class="card hi">Hi, I'm Lauri.<span>I build MyMatrix for people who are good at something and want their own business on top of the skill.</span></div>
+      <div class="stats">
+        <div class="card stat"><div class="v">10 yrs+</div><div class="d">Building products and marketing for $100M brands and affiliate agencies.</div></div>
+        <div class="card stat"><div class="v">0→$45k+ <small>MRR</small></div><div class="d">Grew Exerta.ai from scratch over the last 2 years.</div></div>
+        <div class="card stat"><div class="v">0→1 in 72h</div><div class="d">Vincas won MyMatrix challenge #1, from zero to a live startup.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ways to go further</h2>
+    <div class="promise">
+      <div class="big">I'll get you from zero to your first paying customers in 30&nbsp;days.</div>
+      <div class="g">If you won't put in the effort, I can guarantee it won't work.</div>
+    </div>
+    <div class="offer">
+      <div class="tile"><h4>Free Discord</h4><div class="price">€0</div>
+        <ul><li>#hot-ideas, #hacks and the chat</li><li>Founders on the same path</li></ul></div>
+      <div class="tile"><h4>MyMatrix, on your own</h4><div class="price">€29 <small>a month</small></div>
+        <ul><li>The apps, level by level</li><li>The chat in every app</li><li>The free Discord</li></ul></div>
+      <div class="tile main"><h4>Founding seat, MyMatrix Community</h4><div class="price"><s>€500</s>€200 <small>a month</small></div>
+        <ul><li>Kickoff review at the start</li><li>One-on-one calls with me, every week in month 1</li><li>Private #founding chat, files and setup help</li><li>10 seats, then €500</li></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="next">
+      <div class="big">Got your score? DM me <b>"waitlist"</b></div>
+      <p>Send me your score and your weak spot on Instagram, and I'll tell you which level of MyMatrix fits you next.</p>
+      <div class="btns">
+        <a class="btn main" href="https://ig.me/m/mymatrix_bylauri" target="_blank" rel="noopener">DM @mymatrix_bylauri</a>
+        <a class="btn alt" href="https://joinmymatrix.com/founding" target="_blank" rel="noopener">See the founding seat</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>When people ask</h2>
+    <div class="qa">
+      <div class="card"><h4>"Why not just use Claude?"</h4><p>Go ahead, Claude is great. Claude is a tool, and MyMatrix is a guided experience, with founders on the same journey. MyMatrix shows you what to do. Then Claude or Lovable get amazing, because you know exactly what you need them to do.</p></div>
+      <div class="card"><h4>"Is the prompt the same as the app?"</h4><p>The prompt asks the same 5 questions and scores the same 5 parts. The app keeps your answers and opens the next level when you're ready. In the founding seat, you also get me and other founders next to you.</p></div>
+    </div>
+  </section>
+
+  <p class="sign">Questions or ideas, write to me.<br>Lauri ツ</p>
+</main>
+
+<script type="text/plain" id="prompt"># Founder Fit
+
+You are my founder coach for the next ten minutes. You learn who I am as a founder before anyone talks about a business idea. You do not pick a business idea for me.
+
+## How to talk to me
+- Ask one question at a time and wait for my answer.
+- Keep your messages short, like texting a friend.
+- If my answer is vague ("nothing really", "I don't know"), ask once for one real example from my life. Never count a dodge as an answer.
+- Quote my exact words when you refer to my answers.
+
+## The five questions, in this order
+1. What could you talk about for hours?
+2. What do people already ask you for help with?
+3. What can you make or do alone today, with no money and no team?
+4. Which groups are you in, online or offline, at work or outside work?
+5. What would feel like a win in 30 days?
+
+## The read
+After my fifth answer, give me my Founder strength as a number out of 100, built from five parts. Each part is worth up to 20 points.
+- Knows the field (question 1): how deep my knowledge goes.
+- People already ask (question 2): proof that people want my help today.
+- Can deliver today (question 3): what I could sell this week without money or a team.
+- Can reach buyers (question 4): groups where people who would pay already gather.
+- Clear 30-day win (question 5): how concrete and countable my 30-day goal is.
+
+Score harshly, the way an investor would. For every part, give the points and one plain reason in one sentence, quoting my words. Then name my weakest part as my weak spot.
+
+## My founder type
+Guess my founder type from my answers and say the type as a guess I can correct.
+- Creator: makes things people consume, like content, products or art.
+- Storyteller: wins people with words, by selling, teaching or explaining.
+- Builder: makes tools and systems, like software, automations or processes.
+- Operator: runs and delivers, by organising, managing or serving clients.
+Change the founder type straight away if I say the guess is wrong.
+
+## The end
+Finish with one sentence on the one thing that would raise my weakest part the fastest. Do not suggest a business idea.</script>
+<script>
+  const P = document.getElementById('prompt').textContent.trim();
+  document.getElementById('prompt-view').textContent = P;
+  document.getElementById('gpt').href = 'https://chatgpt.com/?q=' + encodeURIComponent(P);
+  document.getElementById('claude').href = 'https://claude.ai/new?q=' + encodeURIComponent(P);
+  const done = document.getElementById('copied');
+  document.getElementById('copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(P); }
+    catch (e) {
+      const t = document.createElement('textarea'); t.value = P; document.body.appendChild(t); t.select();
+      document.execCommand('copy'); t.remove();
+    }
+    done.classList.add('on'); setTimeout(() => done.classList.remove('on'), 1800);
+  });
+</script>
+</body>
+</html>
